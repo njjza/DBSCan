@@ -6,7 +6,7 @@ double rand_float(double, double);
 
 int main() {
     std::fstream fs;
-    fs.open("sample.dat", std::fstream::in | std::fstream::app);
+    fs.open("Data/sample.dat", std::fstream::in | std::fstream::app);
     fs << "x, y\n";
 
     for(int i = 0; i < 100; i++) {
