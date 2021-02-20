@@ -16,12 +16,14 @@
 class Point {
     double x, y;
     int cluster;
+    int is_visited;//0 is not visited 1=visited
 
     public:
      Point() {
          this->x = 0;
          this->y = 0;
          this->cluster = 0;
+         this->is_visited=0;
      }
      Point(double x, double y) {
          this->x = x;
@@ -31,6 +33,23 @@ class Point {
      void set_cluster(int x) {
          this->cluster = 0;
      }
+     
+     //mark as visited
+     void mark_visited() {
+         this->is_visited = 1;
+     }
+     
+     //undo visited
+     void undo_visited() {
+         this->is_visited = 0;
+     }
+     
+     int if_visited() {
+         return this->is_visited;
+     }
+     
+     
+     
 
      double get_x() {
          return this->x;
