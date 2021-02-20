@@ -28,16 +28,25 @@ class Point {
      Point(double x, double y) {
          this->x = x;
          this->y = y;
+         this->cluster = 0;
+         this->is_visited=0;
      }
 
      void set_cluster(int x) {
-         this->cluster = 0;
+         this->cluster = x;
      }
      
      //mark as visited
      void mark_visited() {
          this->is_visited = 1;
      }
+     
+     //mark as noise
+     void mark_noise() {
+         this->is_visited = 2;
+     }
+     
+     
      
      //undo visited
      void undo_visited() {
@@ -58,6 +67,13 @@ class Point {
      double get_y() {
          return this->y;
      }
+     
+     
+     double get_cluster() {
+         return this->cluster;
+     }
+     
+     
 
      std::vector<double> get_pos() {
          std::vector<double> a = {this->x, this->y};
@@ -71,4 +87,18 @@ class Point {
          double result = sqrt( pow(delta_x, 2) + pow(delta_y, 2) );
          return result;
      }
+     
+     double get_distanceviaxy(int x1,int y1) {
+         double delta_x = x - x1;
+         double delta_y = y - y1;
+
+         double result = sqrt( pow(delta_x, 2) + pow(delta_y, 2) );
+         return result;
+     }
+     
+     
+     
+     
+     
+     
 };
