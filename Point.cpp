@@ -1,6 +1,7 @@
 /**
  * @file    Point.cpp
  * @author  Henry Jiang 2/19/2021
+ * @author  Mingcheng Wur 2/19/2021
  * @version 1.0        
  * 
  * Describe:    Implemented a point class, which contains value x, y, and integer value cluster. 
@@ -57,9 +58,6 @@ class Point {
          return this->is_visited;
      }
      
-     
-     
-
      double get_x() {
          return this->x;
      }
@@ -73,11 +71,8 @@ class Point {
          return this->cluster;
      }
      
-     
-
      std::vector<double> get_pos() {
-         std::vector<double> a = {this->x, this->y};
-         return a;
+         return {this->x, this->y};
      }
 
      double get_distance(Point* p) {
@@ -95,10 +90,4 @@ class Point {
          double result = sqrt( pow(delta_x, 2) + pow(delta_y, 2) );
          return result;
      }
-     
-     
-     
-     
-     
-     
 };
