@@ -21,7 +21,6 @@ int main() {
 void test_Point_get_distance() {
     Point* p = new Point(1.0, 2.0);
     Point* p1 = new Point(-1.0, 2.0);
-    double result = p->get_distance(p1);
     std::cout << "The result equals: " << p->get_distance(p1) << "\n";
 
 }
