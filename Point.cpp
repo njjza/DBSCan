@@ -17,7 +17,7 @@
 class Point {
     double x, y;
     int cluster;
-    int is_visited;//0 is not visited 1=visited
+    int is_visited; //0 is not visited 1=visited
 
     public:
      Point() {
@@ -47,14 +47,12 @@ class Point {
          this->is_visited = 2;
      }
      
-     
-     
      //undo visited
      void undo_visited() {
          this->is_visited = 0;
      }
      
-     int if_visited() {
+     int is_visited() {
          return this->is_visited;
      }
      
@@ -83,7 +81,7 @@ class Point {
          return result;
      }
      
-     double get_distanceviaxy(int x1,int y1) {
+     double get_distance(double x1, double y1) {
          double delta_x = x - x1;
          double delta_y = y - y1;
 
