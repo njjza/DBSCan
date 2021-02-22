@@ -3,31 +3,20 @@
 #include <iostream>
 #include <vector>
 #include <stdlib.h>
-#include <algorithm>
 #include <benchmark/benchmark.h>
 
-#include "include/Random_Generator.hpp"
+#include "include/DataGenerator.hpp"
 #include "include/Point.hpp"
 #include "include/DBSCan.hpp"
 
 void read_file(std::vector<Point>);
 void construct_datasample();
 void print_point_vector(std::vector<Point>&);
+static void BM_DBSCan(benchmark::State& state);
 
-int main() {
+BENCHMARK(BM_DBSCan);
 
-  double eps=2.0;
-  int MinPts=3;
-  std::vector<Point> Dataset;
-  read_file(Dataset);
-
-  DBSCan (Dataset, eps, MinPts);
-
-  std::sort(Dataset.begin(),Dataset.end(), &sortMe);
-  
-  print_point_vector(Dataset);//testing
-  return 0;
-} 
+BENCHMARK_MAIN();
 
 
 void read_file(std::vector<Point> Dataset) {
@@ -75,4 +64,20 @@ void print_point_vector(std::vector<Point> &a) {
    std::cout << a.at(i).get_cluster() << ' ';
    std::cout << "||\n";
    }
+}
+
+static void BM_DBSCan(benchmark::State& state) {
+  double eps=2.0;
+  int MinPts=3;
+  std::vector<Point> Dataset;
+  read_file(Dataset);
+
+
+  for (auto _ : state) {
+    DBSCan (Dataset, eps, MinPts);
+  }
+
+  std::sort(Dataset.begin(),Dataset.end(), &sortMe);
+  
+  print_point_vector(Dataset);//testing
 }
