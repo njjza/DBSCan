@@ -7,11 +7,13 @@
 void generate_data(double range, unsigned int size, std::string const& type) {
     std::fstream fs;
     if(type == "new") {
-        fs.open("../Data/sample.dat", std::ios::out | std::ios::trunc);
+        std::cout << "new\n";
+        fs.open("../data/sample.dat", std::ios::out | std::ios::trunc);
         fs << "x y\n";
     }
     else {
-        fs.open("../Data/sample.dat", std::ios::out | std::ios::app);
+        std::cout << "not new\n";
+        fs.open("../data/sample.dat", std::ios::in | std::ios::out | std::ios::app);
     }
 
     for(unsigned int i = 0; i < size; i++) {
@@ -26,7 +28,7 @@ void generate_data(double range, unsigned int size, double delta) {
     std::fstream fs;
     double range_p, range_n;
 
-    fs.open("../Data/sample.dat", std::ios::out | std::ios::app);
+    fs.open("../data/sample.dat", std::ios::out | std::ios::app);
 
     range_p = range + delta;
     range_n = range - delta;

@@ -66,38 +66,34 @@ void Clusterjoin(std::vector<int> &Neighbor1,std::vector<int> &Neighbor,std::vec
 }
 
 std::vector<Point> rangeQuery(std::vector<Point> &Dataset, Point p, double eps){
-    std::vector<int> Neighbor;
+    std::vector<Point> Neighbor;
     Point tmp;
 
     for(unsigned int i = 0; i < Dataset.size(); i++){
         tmp = Dataset.at(i);
         
         if(p.get_distance(tmp) < eps){
-            Neighbor.push_back(i);
+            Neighbor.push_back(tmp);
         }
     }
     
     return Neighbor;
 }
 
-void expendCluster(std::vector<Point>& Dataset, std::vector<int>& Neighbor, double eps, int Minpts, int clusterNo){    
+void expendCluster(std::vector<Point>& Dataset, std::vector<Point>& Neighbor, double eps, int Minpts, int clusterNo){    
     //check the neighbour if it is in other cluster
-    for(unsigned int j = 0; j < Neighbor.size(); j++){
+    for(unsigned int i = 0; i < Neighbor.size(); i++){
         //get the index of its neighbor
-        int m = Neighbor.at(j);
-        
-        //check the corresponding index
-        //mark neighbor as visited
-        Dataset.at(m).mark_visited();
+        Point p = Neighbor.at(j);
+        p.mark_visited();
 
         //check neighbor's neighbor
-        std::vector<int> Neighbor1=rangeQuery(Dataset,Dataset.at(m),eps);
+        std::vector<Point> Neighbor1=rangeQuery(Dataset,p,eps);
             
         //if neighbour point is a cluster point then combine them together via Clusterjoin()
         //if(Neighbor1.size()>Minpts){
         Clusterjoin(Neighbor1,Neighbor,Dataset,clusterNo);
-            
-            
+
         //if the point is not in any cluster then mark it in this cluster
         //if(Dataset.at(m).get_cluster()==0){
         Dataset.at(m).set_cluster(clusterNo);
@@ -118,11 +114,14 @@ void DBSCan (std::vector<Point> &Dataset, double eps, unsigned int Minpts){
             
             //check all of its neighbour
             std::vector<Point> Neighbor = rangeQuery(Dataset, p, eps);
+            unsigned int len = Neighbor.size();
+            if (len < Minpts) {
+                continue;
+            }
 
-            //if the num of neighbor < Minpts then it is a noise point
-            if (Neighbor.size() >= Minpts) {
-                clusterId++;
-                p.set_cluster(clusterId);
+            p.set_cluster(clusterId);
+            for (unsigned int j = 0; j < len; j++)
+                
                 expendCluster(Dataset,Neighbor,eps,Minpts,clusterId);
             }
         }
