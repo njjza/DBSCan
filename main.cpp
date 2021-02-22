@@ -3,7 +3,6 @@
 #include <iostream>
 #include <vector>
 #include <stdlib.h>
-#include <benchmark/benchmark.h>
 
 #include "include/DataGenerator.hpp"
 #include "include/Point.hpp"
@@ -12,12 +11,21 @@
 void read_file(std::vector<Point>);
 void construct_datasample();
 void print_point_vector(std::vector<Point>&);
-static void BM_DBSCan(benchmark::State& state);
 
-BENCHMARK(BM_DBSCan);
+int main() {
 
-BENCHMARK_MAIN();
+  double eps=2.0;
+  int MinPts=3;
+  std::vector<Point> Dataset;
+  read_file(Dataset);
 
+  DBSCan (Dataset, eps, MinPts);
+
+  std::sort(Dataset.begin(),Dataset.end(), &sortMe);
+  
+  print_point_vector(Dataset);//testing
+  return 0;
+} 
 
 void read_file(std::vector<Point> Dataset) {
   std::string filePath = "Data/sample.dat";
@@ -64,20 +72,4 @@ void print_point_vector(std::vector<Point> &a) {
    std::cout << a.at(i).get_cluster() << ' ';
    std::cout << "||\n";
    }
-}
-
-static void BM_DBSCan(benchmark::State& state) {
-  double eps=2.0;
-  int MinPts=3;
-  std::vector<Point> Dataset;
-  read_file(Dataset);
-
-
-  for (auto _ : state) {
-    DBSCan (Dataset, eps, MinPts);
-  }
-
-  std::sort(Dataset.begin(),Dataset.end(), &sortMe);
-  
-  print_point_vector(Dataset);//testing
 }
