@@ -9,40 +9,18 @@
  *              in this radius will be grouped into a single cluster.
 **/
 
-#include <fstream>
-#include <iostream>
-#include "Point.cpp"
+#include "../include/Point.hpp"
 #include <vector>
 #include <stdlib.h>
 #include <algorithm>
-
-//this function is used for testing vector point
-void print_point_vector(std::vector<Point> &a) {
-   std::cout << "This is a new point: \n";
-
-   for(int i=0; i < a.size(); i++){
-   std::cout << "i is:";
-   std::cout << i;
-   std::cout << "__\n";
-   std::cout << "the x is";
-   std::cout << a.at(i).get_x() << ' ';
-   std::cout << "||\n";
-   std::cout << "the y is";
-   std::cout << a.at(i).get_y() << ' ';
-   std::cout << "||\n";
-   std::cout << "it belongs to cluster:";
-   std::cout << a.at(i).get_cluster() << ' ';
-   std::cout << "||\n";
-   }
-}
 
 void Clusterjoin(std::vector<int> &Neighbor1,std::vector<int> &Neighbor,std::vector<Point> &Dataset,int clusterNo){
     //it is used to find the points'old cluster
     std::vector<int> oldcluster;
 
     //set all neighbor points in the cluster 
-    for(int j=0;j<Neighbor.size();j++){
-        int m=Neighbor.at(j);
+    for(unsigned int j = 0; j < Neighbor.size(); j++){
+        int m = Neighbor.at(j);
         
         //record if the point have some old cluster
         if(Dataset.at(m).get_cluster()!=0){
@@ -51,7 +29,7 @@ void Clusterjoin(std::vector<int> &Neighbor1,std::vector<int> &Neighbor,std::vec
         
     }
     
-    for(int j=0;j<Neighbor1.size();j++){
+    for(unsigned int j=0;j < Neighbor1.size();j++){
         int m=Neighbor1.at(j);
         
         //record if the point have some old cluster
@@ -62,22 +40,22 @@ void Clusterjoin(std::vector<int> &Neighbor1,std::vector<int> &Neighbor,std::vec
     }
      
     //set all points in neighbor in the cluster
-    for(int k=0;k<Neighbor.size();k++){
+    for(unsigned int k = 0; k < Neighbor.size(); k++){
         int n=Neighbor.at(k);
         Dataset.at(n).set_cluster(clusterNo);
     }
     
     //set all neighbor1 point in the cluster 
-    for(int k=0;k<Neighbor1.size();k++){
+    for(unsigned int k=0; k < Neighbor1.size(); k++){
         int n=Neighbor1.at(k);
         Dataset.at(n).set_cluster(clusterNo);
     }
     
     //set all old members in the new cluster
     int temp=0;
-    for(int i=0;i<oldcluster.size();i++){
+    for(unsigned int i=0; i < oldcluster.size(); i++){
         temp=oldcluster.at(i);
-        for(int j=0;j<Dataset.size();j++){
+        for(unsigned int j=0; j < Dataset.size(); j++){
             if(Dataset.at(j).get_cluster()==temp){
                 Dataset.at(j).set_cluster(clusterNo);
             } 
@@ -88,19 +66,23 @@ void Clusterjoin(std::vector<int> &Neighbor1,std::vector<int> &Neighbor,std::vec
 
 std::vector<int> regionQuery(std::vector<Point> &Dataset, int j, double eps){
     std::vector<int> Neighbor;
+    Point p, tmp;
 
-    for(int i=0; i < Dataset.size(); i++){
-        if(Dataset.at(j).get_distance(Dataset.at(i).get_x(), Dataset.at(i).get_y()) < eps){
+    p = Dataset.at(j);
+    for(unsigned int i = 0; i < Dataset.size(); i++){
+        tmp = Dataset.at(i);
+        
+        if(p.get_distance(tmp.get_x(), tmp.get_y()) < eps){
             Neighbor.push_back(i);
         }
-    } 
+    }
     
     return Neighbor;
 }
 
 void expendCluster(std::vector<Point>& Dataset, std::vector<int>& Neighbor, double eps, int Minpts, int clusterNo){    
     //check the neighbour if it is in other cluster
-    for(int j=0; j<Neighbor.size(); j++){
+    for(unsigned int j = 0; j < Neighbor.size(); j++){
         //get the index of its neighbor
         int m = Neighbor.at(j);
         
@@ -122,13 +104,14 @@ void expendCluster(std::vector<Point>& Dataset, std::vector<int>& Neighbor, doub
     }
 }
 
-void DSBscan (std::vector<Point> &Dataset, double eps, int Minpts){
+void DBSCan (std::vector<Point> &Dataset, double eps, unsigned int Minpts){
     //std::Vector<Point> Clusters;
     //initialize the class No.
     int clusterNo = 0;
+    unsigned int len = Dataset.size();
 
     //pick the first point and check its neighbor
-    for(int i=0; i < Dataset.size(); i++) {
+    for(unsigned int i=0; i < len; i++) {
         if(Dataset.at(i).is_visited() == 0) {
             
             Dataset.at(i).mark_visited();

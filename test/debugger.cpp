@@ -1,6 +1,6 @@
 #include <iostream>
 #include <vector>
-#include "Point.cpp"
+#include "../include/Point.hpp"
 
 void test_Point_get_pos();
 void test_Point_get_distance();
