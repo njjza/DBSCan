@@ -6,9 +6,9 @@
 #include <algorithm>
 #include <benchmark/benchmark.h>
 
-#include "src/Random_Generator.cpp"
+#include "include/Random_Generator.hpp"
 #include "include/Point.hpp"
-#include "src/DBSCan.cpp"
+#include "include/DBSCan.hpp"
 
 void read_file(std::vector<Point>);
 void construct_datasample();

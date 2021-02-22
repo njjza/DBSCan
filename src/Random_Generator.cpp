@@ -1,12 +1,17 @@
 #include <iostream>
 #include <fstream>
 #include <stdlib.h>
+#include "../include/Random_Generator.hpp"
 
-double rand_float(double, double);
-
-void generate_data(int range, unsigned int size) {
+void generate_data(int range, unsigned int size, std::string& type) {
     std::ofstream fs;
-    fs.open("Data/sample.dat", std::fstream::out | std::ios::trunc);
+    if(type == "new") {
+        fs.open("Data/sample.dat", std::ios::out | std::ios::trunc);
+    }
+    else {
+        fs.open("Data/sample.dat", std::ios::out | std::ios::app);
+    }
+
     fs << "x y\n";
 
     for(unsigned int i = 0; i < size; i++) {
