@@ -15,8 +15,8 @@
 #include <math.h>
 
 class Point {
-    double x, y;
-    int cluster;
+    double x, y; //attributes denotes the position on x, and y axis.
+    int cluster; //attributes denotes which cluster it belongs to.
     int is_visited; //0 is not visited 1=visited
 
     public:
@@ -26,6 +26,7 @@ class Point {
          this->cluster = 0;
          this->is_visited=0;
      }
+     
      Point(double x, double y) {
          this->x = x;
          this->y = y;
