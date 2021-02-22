@@ -66,17 +66,13 @@ void Clusterjoin(std::vector<int> &Neighbor1,std::vector<int> &Neighbor,std::vec
 
 std::vector<int> regionQuery(std::vector<Point> &Dataset, int j, double eps){
     std::vector<int> Neighbor;
-    Point p, tmp;
-
-    p = Dataset.at(j);
-    for(unsigned int i = 0; i < Dataset.size(); i++){
-        tmp = Dataset.at(i);
-        
-        if(p.get_distance(tmp.get_x(), tmp.get_y()) < eps){
+    
+    for(int i=0; i < Dataset.size(); i++){
+        if(Dataset.at(j).get_distanceviaxy(Dataset.at(i).get_x(),Dataset.at(i).get_y()) < eps){
             Neighbor.push_back(i);
         }
     }
-    
+
     return Neighbor;
 }
 
