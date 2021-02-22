@@ -9,10 +9,12 @@
  *              in this radius will be grouped into a single cluster.
 **/
 
-#include "../include/Point.hpp"
 #include <vector>
 #include <stdlib.h>
 #include <algorithm>
+
+
+#include "../include/DBSCan.hpp"
 
 void Clusterjoin(std::vector<int> &Neighbor1,std::vector<int> &Neighbor,std::vector<Point> &Dataset,int clusterNo){
     //it is used to find the points'old cluster
@@ -67,8 +69,8 @@ void Clusterjoin(std::vector<int> &Neighbor1,std::vector<int> &Neighbor,std::vec
 std::vector<int> regionQuery(std::vector<Point> &Dataset, int j, double eps){
     std::vector<int> Neighbor;
     
-    for(int i=0; i < Dataset.size(); i++){
-        if(Dataset.at(j).get_distanceviaxy(Dataset.at(i).get_x(),Dataset.at(i).get_y()) < eps){
+    for(unsigned int i = 0; i < Dataset.size(); i++){
+        if(Dataset.at(j).get_distance(Dataset.at(i).get_x(),Dataset.at(i).get_y()) < eps){
             Neighbor.push_back(i);
         }
     }

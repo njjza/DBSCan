@@ -5,8 +5,8 @@
 #include <stdlib.h>
 
 #include "include/DataGenerator.hpp"
-#include "include/Point.hpp"
-#include "include/DBSCan.hpp"
+#include "include/PointOptimized.hpp"
+#include "include/DBSCanOptimized.hpp"
 
 void read_file(std::vector<Point>);
 void construct_datasample();

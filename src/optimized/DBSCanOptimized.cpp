@@ -3,16 +3,17 @@
  *  @author Henry Jiang 2/22/2021
  *  @version 1.0
  * 
- *  Describe:   Implemented the core algorithm of DBSCan, but not optimized for modern computer
- *              architecture yet. It is sucessful to cluster the nodes by an arbitrary variable
- *              epsilon, which denotes the max radius from an arbitrary node, and all nodes falls
- *              in this radius will be grouped into a single cluster.
+ *  Describe:   Implemented the core algorithm of DBSCan, but optimized for modern computer
+ *              architecture in single core, single thread situation. It is to 
+ *              cluster the nodes by an arbitrary variable epsilon, which denotes the max 
+ *              radius from an arbitrary node, and all nodes falls in this radius will be 
+ *              grouped into a single cluster.
 **/
 
-#include "../include/Point.hpp"
-#include <vector>
 #include <stdlib.h>
 #include <algorithm>
+
+#include "../../include/DBSCanOptimized.hpp"
 
 void Clusterjoin(std::vector<int> &Neighbor1,std::vector<int> &Neighbor,std::vector<Point> &Dataset, int clusterNo){
     //it is used to find the points'old cluster
@@ -64,15 +65,14 @@ void Clusterjoin(std::vector<int> &Neighbor1,std::vector<int> &Neighbor,std::vec
 
 }
 
-std::vector<int> regionQuery(std::vector<Point> &Dataset, int j, double eps){
+std::vector<Point> rangeQuery(std::vector<Point> &Dataset, Point p, double eps){
     std::vector<int> Neighbor;
-    Point p, tmp;
+    Point tmp;
 
-    p = Dataset.at(j);
     for(unsigned int i = 0; i < Dataset.size(); i++){
         tmp = Dataset.at(i);
         
-        if(p.get_distance(tmp.get_x(), tmp.get_y()) < eps){
+        if(p.get_distance(tmp) < eps){
             Neighbor.push_back(i);
         }
     }
@@ -91,7 +91,7 @@ void expendCluster(std::vector<Point>& Dataset, std::vector<int>& Neighbor, doub
         Dataset.at(m).mark_visited();
 
         //check neighbor's neighbor
-        std::vector<int> Neighbor1=regionQuery(Dataset,m,eps);
+        std::vector<int> Neighbor1=rangeQuery(Dataset,Dataset.at(m),eps);
             
         //if neighbour point is a cluster point then combine them together via Clusterjoin()
         //if(Neighbor1.size()>Minpts){
@@ -105,38 +105,27 @@ void expendCluster(std::vector<Point>& Dataset, std::vector<int>& Neighbor, doub
 }
 
 void DBSCan (std::vector<Point> &Dataset, double eps, unsigned int Minpts){
-    //std::Vector<Point> Clusters;
-    //initialize the class No.
-    int clusterNo = 0;
+    int clusterId = 1;
     unsigned int len = Dataset.size();
+    Point p;
 
     //pick the first point and check its neighbor
-    for(unsigned int i=0; i < len; i++) {
-        if(Dataset.at(i).is_visited() == 0) {
+    for (unsigned int i = 0; i < len; i++) {
+        p = Dataset.at(i);
+        if (p.is_visited()) {
             
-            Dataset.at(i).mark_visited();
+            p.mark_visited();
             
             //check all of its neighbour
-            std::vector<int> Neighbor = regionQuery(Dataset,i,eps);
+            std::vector<Point> Neighbor = rangeQuery(Dataset, p, eps);
 
             //if the num of neighbor < Minpts then it is a noise point
-            if(Neighbor.size() < Minpts) {
-                Dataset.at(i).mark_noise();
-            }
-
-            //else it is a cluster point and check its neighbor
-            else{
-                //increase No.
-                clusterNo++;
-                
-                //set this point in the cluster
-                Dataset.at(i).set_cluster(clusterNo);
-                
-                //expend and check the point's neighbor
-                expendCluster(Dataset,Neighbor,eps,Minpts,clusterNo);
+            if (Neighbor.size() >= Minpts) {
+                clusterId++;
+                p.set_cluster(clusterId);
+                expendCluster(Dataset,Neighbor,eps,Minpts,clusterId);
             }
         }
-   
     }
 }
 
