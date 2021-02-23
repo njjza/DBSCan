@@ -15,7 +15,7 @@
 #include <set>
 #include "../../include/DBSCanOptimized.hpp"
 
-std::vector<unsigned int> rangeQuery(Points &p, unsigned int pos, double eps){
+std::vector<unsigned int> rangeQuery(Points p, unsigned int pos, double eps){
     std::vector<unsigned int> Neighbor;
     Neighbor.reserve(20);
     unsigned int len = p.size();
@@ -57,8 +57,6 @@ void DBSCan (Points p, double eps, unsigned int Minpts){
 
                 neighbor_neighbor = rangeQuery(p, j, eps);
                 if (neighbor_neighbor.size() > Minpts) {
-                    std::sort(neighbor_neighbor.begin(), neighbor_neighbor.end());
-                    std::sort(neighbor.begin(), neighbor.end());
                     std::vector<unsigned int> tmp;
                     tmp.reserve(neighbor.size() + neighbor_neighbor.size());
 
