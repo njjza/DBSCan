@@ -12,60 +12,63 @@
 
 #include <stdlib.h>
 #include <algorithm>
-#include <set>
 #include "../../include/DBSCanOptimized.hpp"
 
-std::vector<unsigned int> rangeQuery(Points p, unsigned int pos, double eps){
+std::vector<unsigned int> rangeQuery(std::vector<Point> pVec, Point p, double eps){
     std::vector<unsigned int> Neighbor;
-    Neighbor.reserve(20);
-    unsigned int len = p.size();
+    Neighbor.reserve(3);
+    unsigned int len = pVec.size();
 
     for(unsigned int i = 0; i < len; i++){
-        if(p.get_distance(pos, i) < eps){
+        if(get_distance(p, pVec[i]) < eps){
             Neighbor.push_back(i);
         }
     }
-    
+
     return Neighbor;
 }
 
-void DBSCan (Points p, double eps, unsigned int Minpts){
-    int grp_id = 1;
-    unsigned int len;
+std::vector<unsigned int> DBSCan (std::vector<Point> pVec, double eps, unsigned short int Minpts){
+    unsigned int len, len2, grp_id = 0;
+    Point p, p2;
     std::vector<unsigned int> neighbor, neighbor_neighbor;
     
-    len = p.size();
+    len = pVec.size();
     //pick the first point and check its neighbor
     for (unsigned int i = 0; i < len; i++) {
-        if (!p.is_visited(i)) {
-            
-            p.mark_visited(i);
-            
-            //check all of its neighbour
-            neighbor = rangeQuery(p, i, eps);
-            if (neighbor.size() < Minpts) {
+        p = pVec[i];
+        if (p.grp_id != POINT_UNDEFINED) {
+            continue;
+        }
+
+        //check all of its neighbour
+        neighbor = rangeQuery(pVec, p, eps);
+        len2 = neighbor.size();
+        if (len2 < Minpts) {
+            p.grp_id = 0;
+            continue;
+        }
+
+        p.grp_id = ++grp_id;
+        for (unsigned int j = 0; j < len2; j++) {
+            p2 = pVec[j];
+            if (p2.grp_id == POINT_UNDEFINED) {
                 continue;
             }
 
-            p.set_cluster(i, grp_id);
-            for (unsigned int j : neighbor) {
-                p.set_cluster(j, grp_id);
+            p2.grp_id = grp_id;
+            neighbor_neighbor = rangeQuery(pVec, p2, eps);
+            if (neighbor_neighbor.size() > Minpts) {
+                std::vector<unsigned int> tmp;
+                tmp.reserve(neighbor.size() + neighbor_neighbor.size());
 
-                if(p.get_cluster(j) > 0) {
-                    continue;
-                }
-
-                neighbor_neighbor = rangeQuery(p, j, eps);
-                if (neighbor_neighbor.size() > Minpts) {
-                    std::vector<unsigned int> tmp;
-                    tmp.reserve(neighbor.size() + neighbor_neighbor.size());
-
-                    std::set_union(neighbor.begin(), neighbor.end(),
-                                    neighbor_neighbor.begin(), neighbor_neighbor.end(),
-                                    tmp.begin());
-                    neighbor = tmp;
-                }
+                std::set_union(neighbor.begin(), neighbor.end(),
+                                neighbor_neighbor.begin(), neighbor_neighbor.end(),
+                                tmp.begin());
+                neighbor = tmp;
             }
         }
     }
+
+    return neighbor;
 }

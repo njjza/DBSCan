@@ -2,8 +2,8 @@
 #define DBS_CAN_H
 
 #include <vector>
-#include "PointsOptimized.hpp"
+#include "PointOptimized.hpp"
 
-void DBSCan (Points p, double eps, unsigned int Minpts);
+std::vector<unsigned int> DBSCan (std::vector<Point> p, double eps, unsigned short int Minpts);
 
 #endif
