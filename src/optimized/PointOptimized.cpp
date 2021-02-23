@@ -81,4 +81,3 @@ double Point::get_distance(double x, double y) {
 
     return sqrt(delta_x * delta_x + delta_y * delta_y);
 }
-

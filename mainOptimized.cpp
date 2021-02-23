@@ -21,7 +21,7 @@ int main() {
 
   DBSCan (Dataset, eps, MinPts);
 
-  std::sort(Dataset.begin(),Dataset.end(), &sortMe);
+  std::sort(Dataset.begin(),Dataset.end(), comparator);
   
   print_point_vector(Dataset);//testing
   return 0;

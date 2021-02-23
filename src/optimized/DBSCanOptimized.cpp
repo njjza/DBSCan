@@ -12,60 +12,10 @@
 
 #include <stdlib.h>
 #include <algorithm>
-
+#include <set>
 #include "../../include/DBSCanOptimized.hpp"
 
-void Clusterjoin(std::vector<int> &Neighbor1,std::vector<int> &Neighbor,std::vector<Point> &Dataset, int clusterNo){
-    //it is used to find the points'old cluster
-    std::vector<int> oldcluster;
-
-    //set all neighbor points in the cluster 
-    for(unsigned int j = 0; j < Neighbor.size(); j++){
-        int m = Neighbor.at(j);
-        
-        //record if the point have some old cluster
-        if(Dataset.at(m).get_cluster()!=0){
-            oldcluster.push_back(Dataset.at(m).get_cluster());
-        }
-        
-    }
-    
-    for(unsigned int j=0;j < Neighbor1.size();j++){
-        int m=Neighbor1.at(j);
-        
-        //record if the point have some old cluster
-        if(Dataset.at(m).get_cluster()!=0){
-            oldcluster.push_back(Dataset.at(m).get_cluster());
-        }
-        
-    }
-     
-    //set all points in neighbor in the cluster
-    for(unsigned int k = 0; k < Neighbor.size(); k++){
-        int n=Neighbor.at(k);
-        Dataset.at(n).set_cluster(clusterNo);
-    }
-    
-    //set all neighbor1 point in the cluster 
-    for(unsigned int k=0; k < Neighbor1.size(); k++){
-        int n=Neighbor1.at(k);
-        Dataset.at(n).set_cluster(clusterNo);
-    }
-    
-    //set all old members in the new cluster
-    int temp=0;
-    for(unsigned int i=0; i < oldcluster.size(); i++){
-        temp=oldcluster.at(i);
-        for(unsigned int j=0; j < Dataset.size(); j++){
-            if(Dataset.at(j).get_cluster()==temp){
-                Dataset.at(j).set_cluster(clusterNo);
-            } 
-        }
-    }
-
-}
-
-std::vector<Point> rangeQuery(std::vector<Point> &Dataset, Point p, double eps){
+std::vector<Point> rangeQuery(std::vector<Point> &Dataset, Point& p, double eps){
     std::vector<Point> Neighbor;
     Point tmp;
 
@@ -80,59 +30,73 @@ std::vector<Point> rangeQuery(std::vector<Point> &Dataset, Point p, double eps){
     return Neighbor;
 }
 
-void expendCluster(std::vector<Point>& Dataset, std::vector<Point>& Neighbor, double eps, int Minpts, int clusterNo){    
-    //check the neighbour if it is in other cluster
-    for(unsigned int i = 0; i < Neighbor.size(); i++){
-        //get the index of its neighbor
-        Point p = Neighbor.at(j);
-        p.mark_visited();
-
-        //check neighbor's neighbor
-        std::vector<Point> Neighbor1=rangeQuery(Dataset,p,eps);
-            
-        //if neighbour point is a cluster point then combine them together via Clusterjoin()
-        //if(Neighbor1.size()>Minpts){
-        Clusterjoin(Neighbor1,Neighbor,Dataset,clusterNo);
-
-        //if the point is not in any cluster then mark it in this cluster
-        //if(Dataset.at(m).get_cluster()==0){
-        Dataset.at(m).set_cluster(clusterNo);
-    }
+bool comparator(Point rhs, Point lhs) {
+    return rhs.get_distance(0, 0) < lhs.get_distance(0, 0);
 }
 
-void DBSCan (std::vector<Point> &Dataset, double eps, unsigned int Minpts){
-    int clusterId = 1;
-    unsigned int len = Dataset.size();
-    Point p;
+void union_point_vector(std::vector<Point>& rhs, std::vector<Point>&lhs, std::vector<Point>& newVec) {
+    unsigned int i1 = 0, i2 = 0, l1 = rhs.size(), l2 = lhs.size();
+    Point p1, p2;
 
-    //pick the first point and check its neighbor
-    for (unsigned int i = 0; i < len; i++) {
-        p = Dataset.at(i);
-        if (p.is_visited()) {
-            
-            p.mark_visited();
-            
-            //check all of its neighbour
-            std::vector<Point> Neighbor = rangeQuery(Dataset, p, eps);
-            unsigned int len = Neighbor.size();
-            if (len < Minpts) {
-                continue;
-            }
+    while (i1 < l1 || i2 < l2) {
+        p1 = rhs[i1];
+        p2 = lhs[i2];
 
-            p.set_cluster(clusterId);
-            for (unsigned int j = 0; j < len; j++)
-                
-                expendCluster(Dataset,Neighbor,eps,Minpts,clusterId);
-            }
+        if (p1.get_x() == p2.get_x() && p1.get_y() == p2.get_y()) {
+            i1++;
+            i2++;
+        }
+        else if (comparator(p1, p2)) {
+            newVec.push_back(p1);
+            i1++;
+        }
+        else {
+            newVec.push_back(p2);
+            i2++;
         }
     }
 }
 
-//c++ comparator
-bool sortMe(Point & a, Point & b){
-    if (a.get_cluster() < b.get_cluster()){
-        return true;
-    } else {
-        return false;
+void DBSCan (std::vector<Point> &Dataset, double eps, unsigned int Minpts){
+    int grp_id = 1;
+    unsigned int len;
+    std::vector<Point> neighbor, neighbor_neighbor;
+    Point p;
+    
+    len = Dataset.size();
+    //pick the first point and check its neighbor
+    for (unsigned int i = 0; i < len; i++) {
+        p = Dataset.at(i);
+        if (!p.is_visited()) {
+            
+            p.mark_visited();
+            
+            //check all of its neighbour
+            neighbor = rangeQuery(Dataset, p, eps);
+            if (neighbor.size() < Minpts) {
+                continue;
+            }
+
+            p.set_cluster(grp_id);
+            for (unsigned int j = 0; j < neighbor.size(); j++) {
+                p = neighbor.at(j);
+                p.set_cluster(grp_id);
+
+                if(p.get_cluster() > 0) {
+                    continue;
+                }
+
+                neighbor_neighbor = rangeQuery(neighbor, p, eps);
+                if (neighbor_neighbor.size() > Minpts) {
+                    std::sort(neighbor_neighbor.begin(), neighbor_neighbor.end(), comparator);
+                    std::sort(neighbor.begin(), neighbor.end(), comparator);
+                    std::vector<Point> tmp;
+                    tmp.reserve(neighbor.size() + neighbor_neighbor.size());
+
+                    union_point_vector(neighbor, neighbor_neighbor, tmp);
+                    neighbor = tmp;
+                }
+            }
+        }
     }
 }

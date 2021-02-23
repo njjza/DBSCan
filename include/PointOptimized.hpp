@@ -1,6 +1,7 @@
 #ifndef Point_H
 #define Point_H
 
+#include <iostream>
 #include <vector>
 class Point {
      double x, y; //attributes denotes the position on x, and y axis.
