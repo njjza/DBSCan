@@ -1,6 +1,7 @@
 #include "../include/DataGenerator.hpp"
+#include <math.h>
 
 int main() {
-    generate_data(10000, 2*100000, "new");
+    generate_data(100000, pow(2, 12), "new");
     return 0;
 }
