@@ -19,13 +19,12 @@ int main() {
   std::vector<Point> Dataset;
   read_file(Dataset);
 
-  DBSCan (Dataset, eps, MinPts);
+  DBSCan(Dataset, eps, MinPts);
 
-  std::sort(Dataset.begin(),Dataset.end(), comparator);
-  
-  print_point_vector(Dataset);//testing
+  //std::sort(Dataset.begin(),Dataset.end(), comparator);
+  //print_point_vector(Dataset);//testing
   return 0;
-} 
+}
 
 void read_file(std::vector<Point> Dataset) {
   std::string filePath = "Data/sample.dat";
