@@ -15,85 +15,56 @@
 #include <set>
 #include "../../include/DBSCanOptimized.hpp"
 
-std::vector<Point> rangeQuery(std::vector<Point> &Dataset, Point& p, double eps){
-    std::vector<Point> Neighbor;
-    Point tmp;
+std::vector<unsigned int> rangeQuery(Points &p, unsigned int pos, double eps){
+    std::vector<unsigned int> Neighbor;
+    Neighbor.reserve(20);
+    unsigned int len = p.size();
 
-    for(unsigned int i = 0; i < Dataset.size(); i++){
-        tmp = Dataset.at(i);
-        
-        if(p.get_distance(tmp) < eps){
-            Neighbor.push_back(tmp);
+    for(unsigned int i = 0; i < len; i++){
+        if(p.get_distance(pos, i) < eps){
+            Neighbor.push_back(i);
         }
     }
     
     return Neighbor;
 }
 
-bool comparator(Point rhs, Point lhs) {
-    return rhs.get_distance(0, 0) < lhs.get_distance(0, 0);
-}
-
-void union_point_vector(std::vector<Point>& rhs, std::vector<Point>&lhs, std::vector<Point>& newVec) {
-    unsigned int i1 = 0, i2 = 0, l1 = rhs.size(), l2 = lhs.size();
-    Point p1, p2;
-
-    while (i1 < l1 || i2 < l2) {
-        p1 = rhs[i1];
-        p2 = lhs[i2];
-
-        if (p1.get_x() == p2.get_x() && p1.get_y() == p2.get_y()) {
-            i1++;
-            i2++;
-        }
-        else if (comparator(p1, p2)) {
-            newVec.push_back(p1);
-            i1++;
-        }
-        else {
-            newVec.push_back(p2);
-            i2++;
-        }
-    }
-}
-
-void DBSCan (std::vector<Point> &Dataset, double eps, unsigned int Minpts){
+void DBSCan (Points &p, double eps, unsigned int Minpts){
     int grp_id = 1;
     unsigned int len;
-    std::vector<Point> neighbor, neighbor_neighbor;
-    Point p;
+    std::vector<unsigned int> neighbor, neighbor_neighbor;
     
-    len = Dataset.size();
+    len = p.size();
     //pick the first point and check its neighbor
     for (unsigned int i = 0; i < len; i++) {
-        p = Dataset.at(i);
-        if (!p.is_visited()) {
+        if (!p.is_visited(i)) {
             
-            p.mark_visited();
+            p.mark_visited(i);
             
             //check all of its neighbour
-            neighbor = rangeQuery(Dataset, p, eps);
+            neighbor = rangeQuery(p, i, eps);
             if (neighbor.size() < Minpts) {
                 continue;
             }
 
-            p.set_cluster(grp_id);
-            for (unsigned int j = 0; j < neighbor.size(); j++) {
-                p = neighbor.at(j);
-                p.set_cluster(grp_id);
+            p.set_cluster(i, grp_id);
+            for (unsigned int j : neighbor) {
+                p.set_cluster(j, grp_id);
 
-                if(p.get_cluster() > 0) {
+                if(p.get_cluster(j) > 0) {
                     continue;
                 }
 
-                neighbor_neighbor = rangeQuery(neighbor, p, eps);
+                neighbor_neighbor = rangeQuery(p, j, eps);
                 if (neighbor_neighbor.size() > Minpts) {
-                    std::sort(neighbor_neighbor.begin(), neighbor_neighbor.end(), comparator);
-                    std::sort(neighbor.begin(), neighbor.end(), comparator);
-                    std::vector<Point> tmp;
+                    std::sort(neighbor_neighbor.begin(), neighbor_neighbor.end());
+                    std::sort(neighbor.begin(), neighbor.end());
+                    std::vector<unsigned int> tmp;
                     tmp.reserve(neighbor.size() + neighbor_neighbor.size());
 
-                    union_point_vector(neighbor, neighbor_neighbor, tmp);
+                    std::set_union(neighbor.begin(), neighbor.end(),
+                                    neighbor_neighbor.begin(), neighbor_neighbor.end(),
+                                    tmp.begin());
                     neighbor = tmp;
                 }
             }

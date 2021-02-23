@@ -1,83 +1,70 @@
 /**
- * @file    Point.cpp
+ * @file    Points.cpp
  * @author  Henry Jiang 2/19/2021
  * @author  Mingcheng Wur 2/19/2021
  * @version 1.0        
  * 
- * Describe:    Implemented a point class, which contains value x, y, and integer value cluster. 
+ * Describe:    Implemented a Points class, which contains value x, y, and integer value cluster. 
  *              It also contains function get_pos(), andget_distance().
  * 
- *              The parameters denotes a point at a 2-d euclidean space, and the cluster denots
+ *              The parameters denotes a Points at a 2-d euclidean space, and the cluster denots
  *              which group it falls into. If no extension is been defined, the default should
  *              be 0.
 **/
 
 #include <math.h>
-#include "../../include/PointOptimized.hpp"
+#include "../../include/PointsOptimized.hpp"
 
-Point::Point() {
-    this->x = 0;
-    this->y = 0;
-    this->cluster = 0;
-    this->visited = 0;
+void Points::add_point(double x, double y) {
+    std::vector<double> tmp = {x, y};
+    pos.push_back(tmp);
 }
 
-Point::Point(double x, double y) {
-    this->x = x;
-    this->y = y;
-    this->cluster = 0;
-    this->visited = 0;
+std::vector<double> Points::get_pos(unsigned int i) {
+    return pos[i];
 }
 
-void Point::set_cluster(int group_id) {
-    this->cluster = group_id;
+void Points::set_cluster(unsigned int i, unsigned int group_id) {
+    clusters[i] = group_id;
 }
 
 //mark as visited
-void Point::mark_visited() {
-    this->visited = true;
+void Points::mark_visited(unsigned int i) {
+    visited[i] = true;
 }
 
 //undo visited
-void Point::undo_visited() {
-    this->visited = false;
+void Points::undo_visited(unsigned int i) {
+    visited[i] = false;
 }
 
-bool Point::is_visited() {
-    return this->visited;
+bool Points::is_visited(unsigned int i) {
+    return visited[i];
 }
 
-double Point::get_x() {
-    return this->x;
+int Points::get_cluster(unsigned int i) {
+    return clusters[i];
 }
 
-double Point::get_y() {
-    return this->y;
-}
+double Points::get_distance(unsigned int i1, unsigned int i2) {
+    std::vector<double> tmp = get_pos(i1);
+    std::vector<double> tmp2 = get_pos(i2);
 
-
-int Point::get_cluster() {
-    return this->cluster;
-}
-
-std::vector<double> Point::get_pos() {
-    return {this->x, this->y};
-}
-
-double Point::get_distance(Point p) {
-    double delta_x, delta_y;
-
-    delta_x = this->x - p.get_x();
-    delta_y = this->y - p.get_y();
+    double delta_x = tmp[0] - tmp2[0];
+    double delta_y = tmp[1] - tmp2[1];
 
     return sqrt(delta_x * delta_x + delta_y * delta_y);
 }
 
-double Point::get_distance(double x, double y) {
-    double delta_x, delta_y;
+double Points::get_distance(unsigned int i, double x, double y) {
+    std::vector<double> tmp = get_pos(i);
     
-    delta_x = this->x - x;
-    delta_y = this->y - y;
+    double delta_x = tmp[0] - x;
+    double delta_y = tmp[1] - y;
 
     return sqrt(delta_x * delta_x + delta_y * delta_y);
+}
+
+size_t Points::size() {
+    return pos.size();
 }
