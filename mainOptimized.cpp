@@ -27,7 +27,7 @@ int main() {
 }
 
 void read_file(std::vector<Point> Dataset) {
-  std::string filePath = "Data/sample.dat";
+  std::string filePath = "../data/sample.dat";
 
   std::ifstream input(filePath);
   std::string line;
