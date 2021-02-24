@@ -29,8 +29,8 @@ std::vector<unsigned int> rangeQuery(Points &p, unsigned int pos, double eps){
     return Neighbor;
 }
 
-void DBSCan (Points &p, double eps, unsigned int Minpts){
-    int grp_id = 1;
+void DBSCan (Points p, double eps, unsigned int Minpts){
+    int grp_id = 0;
     unsigned int len;
     std::vector<unsigned int> neighbor, neighbor_neighbor;
     
@@ -39,7 +39,7 @@ void DBSCan (Points &p, double eps, unsigned int Minpts){
     for (unsigned int i = 0; i < len; i++) {
         if (!p.is_visited(i)) {
             
-            p.mark_visited(i);
+            p.mark_visited(++i);
             
             //check all of its neighbour
             neighbor = rangeQuery(p, i, eps);

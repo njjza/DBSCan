@@ -5,7 +5,6 @@
 #include <stdlib.h>
 
 #include "include/DataGenerator.hpp"
-#include "include/PointsOptimized.hpp"
 #include "include/DBSCanOptimized.hpp"
 
 void read_file(Points p);
@@ -25,7 +24,7 @@ int main() {
 }
 
 void read_file(Points p) {
-  std::string filePath = "Data/sample.dat";
+  std::string filePath = "../data/sample.dat";
 
   std::ifstream input(filePath);
   std::string line;
