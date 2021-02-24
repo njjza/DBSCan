@@ -30,7 +30,7 @@ std::vector<unsigned int> rangeQuery(std::vector<Point> pVec, Point p, double ep
 }
 
 bool comparator(Point a, Point b) {
-    return (a.x * a.x + a.y * a.y) < (b.x * b.x + b.y * b.y);
+    return get_distance(a, b) < 2.0;
 }
 
 std::vector<unsigned int> DBSCan (std::vector<Point> pVec, double eps, unsigned short int Minpts){

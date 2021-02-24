@@ -17,9 +17,12 @@
 
 double get_distance(Point p1, Point p2) {
     double delta_x = p1.x - p2.x;
-    double delta_y = p1.y - p2.y;
+    delta_x *= delta_x;
 
-    return sqrt(delta_x * delta_x + delta_y * delta_y);
+    double delta_y = p1.y - p2.y;
+    delta_y *= delta_y;
+
+    return sqrt(delta_x + delta_y);
 }
 
 double get_distance(Point p, double x, double y) {
