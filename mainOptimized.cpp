@@ -25,16 +25,45 @@ void read_file(std::vector<Point> pVec) {
   std::ifstream input(filePath);
   std::string line;
   double x, y;
-  Point p1;
+  Point p1, p2, p3, p4;
 
   for(;;)
   {
     getline(input, line);
-    
     input >> x >> y;
     p1.x = x;
     p1.y = y;
     pVec.push_back(p1);
+
+    if(input.fail()){
+        break;
+    }
+
+    getline(input, line);
+    input >> x >> y;
+    p1.x = x;
+    p1.y = y;
+    pVec.push_back(p2);
+
+    if(input.fail()){
+        break;
+    }
+
+    getline(input, line);
+    input >> x >> y;
+    p1.x = x;
+    p1.y = y;
+    pVec.push_back(p3);
+
+    if(input.fail()){
+        break;
+    }
+
+    getline(input, line);
+    input >> x >> y;
+    p1.x = x;
+    p1.y = y;
+    pVec.push_back(p4);
 
     if(input.fail()){
         break;
