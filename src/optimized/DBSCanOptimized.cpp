@@ -15,6 +15,7 @@
 #include "../../include/DBSCanOptimized.hpp"
 
 std::vector<unsigned int> rangeQuery(std::vector<Point> pVec, Point p, double eps){
+    //Point tmp1, tmp2, tmp3, tmp4;
     std::vector<unsigned int> Neighbor;
     Neighbor.reserve(3);
     unsigned int len = pVec.size();
@@ -28,11 +29,17 @@ std::vector<unsigned int> rangeQuery(std::vector<Point> pVec, Point p, double ep
     return Neighbor;
 }
 
+bool comparator(Point a, Point b) {
+    return (a.x * a.x + a.y * a.y) < (b.x * b.x + b.y * b.y);
+}
+
 std::vector<unsigned int> DBSCan (std::vector<Point> pVec, double eps, unsigned short int Minpts){
     unsigned int len, len2, grp_id = 0;
     Point p, p2;
     std::vector<unsigned int> neighbor, neighbor_neighbor;
     
+    std::sort(pVec.begin(), pVec.end(), comparator);
+
     len = pVec.size();
     //pick the first point and check its neighbor
     for (unsigned int i = 0; i < len; i++) {

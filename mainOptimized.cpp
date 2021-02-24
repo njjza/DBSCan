@@ -16,10 +16,7 @@ int main() {
   p.reserve(10);
 
   read_file(p);
-  DBSCan(p, eps, MinPts);
-
-  //std::sort(Dataset.begin(),Dataset.end(), comparator);
-  //print_point_vector(Dataset);//testing
+  std::vector<unsigned int> iVec = DBSCan(p, eps, MinPts);
   return 0;
 }
 
