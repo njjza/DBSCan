@@ -24,21 +24,55 @@ void read_file(std::vector<Point> pVec) {
   std::string filePath = "Data/sample.dat";
   std::ifstream input(filePath);
   std::string line;
-
-  while(input)
+  double x, y;
+  Point p1, p2, p3, p4;
+  
+  for(;;)
   {
     getline(input, line);
-    double x, y;
+    
     input >> x >> y;
-    
-    Point p;
-    p.x = x;
-    p.y = y;
-    pVec.push_back(p);
-    
-    //the last line will not be push twice because of the getline() problem in c++
+    p1.x = x;
+    p1.y = y;
+    pVec.push_back(p1);
+
     if(input.fail()){
         break;
     }
+    
+    getline(input, line);
+    input >> x >> y;
+    
+    p2.x = x;
+    p2.y = y;
+    pVec.push_back(p2);
+
+    if(input.fail()){
+        break;
+    }
+
+    getline(input, line);
+    input >> x >> y;
+    
+    p3.x = x;
+    p3.y = y;
+    pVec.push_back(p3);
+
+    if(input.fail()){
+        break;
+    }
+
+    getline(input, line);
+    input >> x >> y;
+    
+    p4.x = x;
+    p4.y = y;
+    pVec.push_back(p4);
+
+    if(input.fail()){
+        break;
+    }
+    //the last line will not be push twice because of the getline() problem in c++
+    
   }
 }

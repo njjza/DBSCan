@@ -32,14 +32,17 @@ std::vector<unsigned int> rangeQuery(std::vector<Point> pVec, Point p, double ep
         if(get_distance(p, tmp1) < eps){
             Neighbor.push_back(i);
         }
+
         tmp2 = pVec[i++];
         if(get_distance(p, tmp2) < eps){
             Neighbor.push_back(i);
         }
+
         tmp3 = pVec[i++];
         if(get_distance(p, tmp3) < eps){
             Neighbor.push_back(i);
         }
+        
         tmp4 = pVec[i++];
         if(get_distance(p, tmp4) < eps){
             Neighbor.push_back(i);
