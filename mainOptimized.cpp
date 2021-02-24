@@ -39,8 +39,5 @@ void read_file(std::vector<Point> pVec) {
     if(input.fail()){
         break;
     }
-
-    std::cout << "<" << p1.x << ", " << p1.y << ">" << "\n";
-    //the last line will not be push twice because of the getline() problem in c++
   }
 }
