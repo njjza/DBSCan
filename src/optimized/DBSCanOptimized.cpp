@@ -27,23 +27,23 @@ std::vector<unsigned int> rangeQuery(std::vector<Point> pVec, Point p, double ep
         }
     }
 
-    for(unsigned int i = m; i < len; i++){
-        tmp1 = pVec[i++];
+    for(unsigned int i = m - 1; i < len; ){
+        tmp1 = pVec[++i];
         if(get_distance(p, tmp1) < eps){
             Neighbor.push_back(i);
         }
 
-        tmp2 = pVec[i++];
+        tmp2 = pVec[++i];
         if(get_distance(p, tmp2) < eps){
             Neighbor.push_back(i);
         }
 
-        tmp3 = pVec[i++];
+        tmp3 = pVec[++i];
         if(get_distance(p, tmp3) < eps){
             Neighbor.push_back(i);
         }
-        
-        tmp4 = pVec[i++];
+
+        tmp4 = pVec[++i];
         if(get_distance(p, tmp4) < eps){
             Neighbor.push_back(i);
         }
