@@ -15,13 +15,33 @@
 #include "../../include/DBSCanOptimized.hpp"
 
 std::vector<unsigned int> rangeQuery(std::vector<Point> pVec, Point p, double eps){
-    //Point tmp1, tmp2, tmp3, tmp4;
+    Point tmp1, tmp2, tmp3, tmp4;
     std::vector<unsigned int> Neighbor;
     Neighbor.reserve(3);
     unsigned int len = pVec.size();
+    unsigned int m = len%4;
 
-    for(unsigned int i = 0; i < len; i++){
+    for(unsigned int i = 0; i < m; i++){
         if(get_distance(p, pVec[i]) < eps){
+            Neighbor.push_back(i);
+        }
+    }
+
+    for(unsigned int i = m; i < len; i++){
+        tmp1 = pVec[i++];
+        if(get_distance(p, tmp1) < eps){
+            Neighbor.push_back(i);
+        }
+        tmp2 = pVec[i++];
+        if(get_distance(p, tmp2) < eps){
+            Neighbor.push_back(i);
+        }
+        tmp3 = pVec[i++];
+        if(get_distance(p, tmp3) < eps){
+            Neighbor.push_back(i);
+        }
+        tmp4 = pVec[i++];
+        if(get_distance(p, tmp4) < eps){
             Neighbor.push_back(i);
         }
     }
