@@ -13,7 +13,7 @@
 **/
 
 #include <math.h>
-#include "PointOptimized.hpp"
+#include "../../include/PointOptimized.hpp"
 #include <nmmintrin.h>
 #include <immintrin.h>
 

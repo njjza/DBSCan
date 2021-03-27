@@ -40,26 +40,27 @@ void read_file(std::vector<Point> &pVec) {
   Point p1;
   int flag=0;
 
-  //#pragma omp parallel
+  #pragma omp parallel
   while(flag==0)
   {
   
-    //#pragma omp critical
-    //{
+    #pragma omp critical
+    {
     getline(input, line);
     //#pragma omp critical
     input >> x >> y;
     
     p1.x = x;
     p1.y = y;
-    p1.grp_id=POINT_UNDEFINED;
     pVec.push_back(p1);
-    //}
+    }
+    
+    printf("fdsfakjkfjds\n");
     
     if(input.fail()){
         flag=1;
     }
     
   }
-    //std::cout << pVec.size();
+    std::cout << pVec.size();
 }

@@ -1,7 +1,7 @@
 #ifndef DBS_CAN_H
 #define DBS_CAN_H
 
-#include "Point.hpp"
+#include "../include/Point.hpp"
 
 void Clusterjoin(std::vector<int> &Neighbor1,std::vector<int> &Neighbor,std::vector<Point> &Dataset,int clusterNo);
 std::vector<int> regionQuery(std::vector<Point> &Dataset, int j, double eps);
